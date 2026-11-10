@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { summarizeTrials } from '../src/results.js';
+import '../src/results.js';
+
+const { summarizeTrials } = globalThis;
 
 test('summarizes accuracy and reaction time for correct trials only', () => {
   assert.deepEqual(summarizeTrials([

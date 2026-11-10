@@ -4,18 +4,11 @@ A small browser-based experiment built with [jsPsych](https://www.jspsych.org/).
 
 ## Run locally
 
-Requires Node.js 20.19 or newer and a keyboard.
-
-```sh
-npm install
-npm run dev
-```
-
-Open the local URL printed by Vite. To create a production build, run `npm run build`; use `npm run preview` to serve that build locally. Run `npm test` for the summary calculation tests.
+No build step or server is needed: open `index.html` in a browser (a keyboard is required). `npm test` (Node.js 20+) runs the summary calculation tests.
 
 ## Vendored jsPsych
 
-The jsPsych **6.3.1** library, its html-button-response and html-keyboard-response plugins, stylesheet, and license are checked in under `public/vendor/jspsych/`. The app loads these local files; npm is only needed for the Vite development and build tools. The stylesheet is unchanged except for removing its external Google Fonts import.
+The jsPsych **6.3.1** library, its html-button-response and html-keyboard-response plugins, stylesheet, and license are checked in under `vendor/jspsych/`. The app loads these local files with relative paths, so it also works from `file://`. The stylesheet is unchanged except for removing its external Google Fonts import.
 
 ## How it works
 

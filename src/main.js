@@ -1,7 +1,4 @@
-import './style.css';
-import { summarizeTrials } from './results.js';
-
-const jsPsych = window.jsPsych;
+const { jsPsych, summarizeTrials } = window;
 
 const welcome = {
   type: 'html-button-response',
