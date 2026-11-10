@@ -1,25 +1,10 @@
-import { initJsPsych } from 'jspsych';
-import htmlButtonResponse from '@jspsych/plugin-html-button-response';
-import htmlKeyboardResponse from '@jspsych/plugin-html-keyboard-response';
-import 'jspsych/css/jspsych.css';
 import './style.css';
 import { summarizeTrials } from './results.js';
 
-const jsPsych = initJsPsych({
-  display_element: 'experiment',
-  on_finish: () => {
-    document.getElementById('experiment').innerHTML = `
-      <div class="card">
-        <p class="eyebrow">Experiment complete</p>
-        <h1>Thanks for taking part.</h1>
-        <p>Refresh this page to try the experiment again.</p>
-      </div>
-    `;
-  },
-});
+const jsPsych = window.jsPsych;
 
 const welcome = {
-  type: htmlButtonResponse,
+  type: 'html-button-response',
   stimulus: `
     <div class="card">
       <p class="eyebrow">A jsPsych example</p>
@@ -36,9 +21,9 @@ const welcome = {
 };
 
 const reactionTrial = {
-  type: htmlKeyboardResponse,
+  type: 'html-keyboard-response',
   stimulus: () => {
-    const color = jsPsych.evaluateTimelineVariable('color');
+    const color = jsPsych.timelineVariable('color', true);
     return `
       <div class="card">
         <p class="eyebrow">Press F for blue &nbsp; / &nbsp; J for orange</p>
@@ -53,7 +38,7 @@ const reactionTrial = {
     expected_response: jsPsych.timelineVariable('key'),
   },
   on_finish: (data) => {
-    data.correct = data.response === data.expected_response;
+    data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.expected_response);
   },
 };
 
@@ -68,7 +53,7 @@ const trials = {
 };
 
 const results = {
-  type: htmlButtonResponse,
+  type: 'html-button-response',
   stimulus: () => {
     const summary = summarizeTrials(jsPsych.data.get().filter({ task: 'reaction' }).values());
     const reactionTime = summary.meanReactionTime === null ? '—' : `${summary.meanReactionTime} ms`;
@@ -92,4 +77,16 @@ const results = {
   },
 };
 
-jsPsych.run([welcome, trials, results]);
+jsPsych.init({
+  display_element: 'experiment',
+  timeline: [welcome, trials, results],
+  on_finish: () => {
+    document.getElementById('experiment').innerHTML = `
+      <div class="card">
+        <p class="eyebrow">Experiment complete</p>
+        <h1>Thanks for taking part.</h1>
+        <p>Refresh this page to try the experiment again.</p>
+      </div>
+    `;
+  },
+});
